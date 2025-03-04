@@ -30,7 +30,7 @@ export default function Page() {
       setIsLoadingTwo(false)
     })
 
-    // if you remove this, both will return
+    // page transition whilst the actions are running
     setTimeout(() => {
       router.push('/?test=1')
     }, 1)
