@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# then head to localhost:3000 and observe that the second action never returns
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![CleanShot 2025-03-04 at 13 09 58](https://github.com/user-attachments/assets/259af5a1-9aa5-4056-8ea0-da7ae86fc5ad)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```ts
+'use client'
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+import {useRouter} from "next/navigation";
+import {action} from "@/app/action";
+import {useEffect, useState} from "react";
 
-## Learn More
+export default function Page() {
+  const router = useRouter()
 
-To learn more about Next.js, take a look at the following resources:
+  const [isLoadingOne, setIsLoadingOne] = useState(true)
+  const [isLoadingTwo, setIsLoadingTwo] = useState(true)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  useEffect(() => {
+    // this action returns
+    action().finally(() => {
+      setIsLoadingOne(false)
+    })
 
-## Deploy on Vercel
+    // this action never executes
+    action().finally(() => {
+      setIsLoadingTwo(false)
+    })
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    // if you remove this, both will return
+    setTimeout(() => {
+      router.push('/?test=1')
+    }, 1)
+  }, [router]);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+  return (
+    <div className="space-y-4 p-4">
+      <div>
+        {isLoadingOne ? 'Executing action one...' : 'Action one has returned'}
+      </div>
+      <div>
+        {isLoadingTwo ? 'Executing action two...' : 'Action two has returned'}
+      </div>
+    </div>
+  );
+}
+
+```
