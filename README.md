@@ -1,9 +1,8 @@
-```bash
-npm run dev
-# then head to localhost:3000 and observe that the second action never returns
-```
+## Minimal reproduction - server action "black hole"
 
-![CleanShot 2025-03-04 at 13 09 58](https://github.com/user-attachments/assets/259af5a1-9aa5-4056-8ea0-da7ae86fc5ad)
+If there is more than one server action running during a route transition, only the first server action returns.
+
+For example:
 
 ```ts
 'use client'
@@ -51,3 +50,12 @@ export default function Page() {
 }
 
 ```
+
+### how to run?
+
+```bash
+npm run dev
+# then head to localhost:3000 and observe that the second action never returns
+```
+
+![CleanShot 2025-03-04 at 13 32 33](https://github.com/user-attachments/assets/4eca87d9-a13c-4a2a-b8d4-4e7200dd1b30)
